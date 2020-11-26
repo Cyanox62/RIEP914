@@ -30,5 +30,6 @@ namespace RIEP914
         }
 
         public override string Name => "Rep914";
+        public override string Author => "Cyanox";
     }
 }
