@@ -74,7 +74,7 @@ namespace RIEP914
 					}
 					else if (player.Team == Team.CHI)
 					{
-						ChangeRole(player, (RoleType)REP914.singleton.Config.mtfClassID);
+						ChangeRole(player, (RoleType)REP914.singleton.Config.mtfClassId);
 					}
 				}
 			}
