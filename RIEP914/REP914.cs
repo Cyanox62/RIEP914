@@ -17,6 +17,7 @@ namespace RIEP914
             ev = new EventHandlers();
             Exiled.Events.Handlers.Scp914.UpgradingItems += ev.OnUpgradingItems;
             Exiled.Events.Handlers.Player.ChangingRole += ev.OnChangeRole;
+            Exiled.Events.Handlers.Server.WaitingForPlayers += ev.OnWaitingForPlayers;
         }
 
         public override void OnDisabled()
@@ -25,6 +26,7 @@ namespace RIEP914
 
             Exiled.Events.Handlers.Scp914.UpgradingItems -= ev.OnUpgradingItems;
             Exiled.Events.Handlers.Player.ChangingRole -= ev.OnChangeRole;
+            Exiled.Events.Handlers.Server.WaitingForPlayers -= ev.OnWaitingForPlayers;
 
             ev = null;
         }

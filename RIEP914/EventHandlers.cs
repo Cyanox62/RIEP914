@@ -11,6 +11,8 @@ namespace RIEP914
 {
 	class EventHandlers
 	{
+		private List<Room> rooms = new List<Room>();
+
 		private List<RoleType> scps = new List<RoleType>()
 		{
 			RoleType.Scp049,
@@ -18,6 +20,19 @@ namespace RIEP914
 			RoleType.Scp106,
 			RoleType.Scp173,
 			RoleType.Scp93953,
+		};
+
+		private string[] roomBlacklist =
+		{
+			"HCZ_106",
+			"HCZ_457",
+			"HCZ_079",
+			"LCZ_914",
+			"LCZ_012",
+			"PocketWorld",
+			"Room3ar",
+			"LCZ_Armory",
+			"Surface"
 		};
 
 		private void ChangeRole(Player player, RoleType newRole)
@@ -38,13 +53,22 @@ namespace RIEP914
 			}
 		}
 
+		internal void OnWaitingForPlayers()
+		{
+			rooms.Clear();
+			foreach (Room room in Map.Rooms.Where(x => !roomBlacklist.Contains(x.name)))
+			{
+				rooms.Add(room);
+			}
+		}
+
 		internal void OnUpgradingItems(UpgradingItemsEventArgs ev)
 		{
 			if (ev.KnobSetting == Scp914.Scp914Knob.Coarse)
 			{
 				foreach (Player player in ev.Players)
 				{
-					Vector3 pos = Map.Rooms[UnityEngine.Random.Range(0, Map.Rooms.Count)].Position;
+					Vector3 pos = rooms[UnityEngine.Random.Range(0, rooms.Count)].Position;
 					pos.y += 2f;
 					Timing.CallDelayed(0.1f, () => player.Position = pos);
 					player.Health *= REP914.singleton.Config.courceHealthPercent / 100f;
@@ -82,12 +106,17 @@ namespace RIEP914
 			{
 				foreach (Player player in ev.Players)
 				{
-					Log.Info(player.CurrentItem.id);
 					if (player.CurrentItem.id == ItemType.Coin)
 					{
-						Log.Info("swapping");
 						player.Inventory.items.Remove(player.CurrentItem);
 						player.Inventory.AddNewItem(ItemType.KeycardJanitor);
+					}
+				}
+				foreach (Pickup item in ev.Items)
+				{
+					if (item.ItemId == ItemType.Coin)
+					{
+						Timing.CallDelayed(0.1f, () => item.ItemId = ItemType.KeycardJanitor);
 					}
 				}
 			}
