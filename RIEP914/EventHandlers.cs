@@ -32,7 +32,9 @@ namespace RIEP914
 			"PocketWorld",
 			"Room3ar",
 			"LCZ_Armory",
-			"Surface"
+			"Surface",
+			"EZ_Shelter",
+			"HCZ_Tesla"
 		};
 
 		private void ChangeRole(Player player, RoleType newRole)
@@ -53,12 +55,28 @@ namespace RIEP914
 			}
 		}
 
+		private bool IsValid(Room room)
+		{
+			foreach (string s in roomBlacklist)
+			{
+				if (room.name.Contains(s))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
 		internal void OnWaitingForPlayers()
 		{
 			rooms.Clear();
-			foreach (Room room in Map.Rooms.Where(x => !roomBlacklist.Contains(x.name)))
+			for (int i = 0; i < Map.Rooms.Count; i++)
 			{
-				rooms.Add(room);
+				Room room = Map.Rooms[i];
+				if (IsValid(room))
+				{
+					rooms.Add(room);
+				}
 			}
 		}
 
