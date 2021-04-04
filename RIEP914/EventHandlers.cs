@@ -88,7 +88,7 @@ namespace RIEP914
 				{
 					Vector3 pos = rooms[UnityEngine.Random.Range(0, rooms.Count)].Position;
 					pos.y += 2f;
-					Timing.CallDelayed(0.1f, () => player.Position = pos);
+					Timing.CallDelayed(0.1f, () => player.ReferenceHub.playerMovementSync.ForceSafePosition(pos));
 					player.Health *= REP914.singleton.Config.courceHealthPercent / 100f;
 				}
 			}
@@ -99,7 +99,18 @@ namespace RIEP914
 					if (player.Team == Team.SCP && player.Role != RoleType.Scp0492)
 					{
 						List<RoleType> scpList = scps.Where(x => x != player.Role).ToList();
-						ChangeRole(player, scpList[UnityEngine.Random.Range(0, scpList.Count)]);
+						RoleType role = scpList[UnityEngine.Random.Range(0, scpList.Count)];
+						if (role == RoleType.Scp096 && Player.List.FirstOrDefault(x => x.Role == RoleType.Scp096) != null)
+						{
+							var list = scpList.Where(x => x != RoleType.Scp096).ToList();
+							role = list[UnityEngine.Random.Range(0, list.Count)];
+						}
+						else if (role == RoleType.Scp106 && Player.List.FirstOrDefault(x => x.Role == RoleType.Scp106) != null)
+						{
+							var list = scpList.Where(x => x != RoleType.Scp106).ToList();
+							role = list[UnityEngine.Random.Range(0, list.Count)];
+						}
+						ChangeRole(player, role);
 					}
 					else if (player.Team == Team.CDP)
 					{
